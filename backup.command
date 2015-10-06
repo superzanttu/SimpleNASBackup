@@ -1,10 +1,11 @@
 #!/bin/bash
-B_NAME="Home folder backup"
-B_VERSION="1.2"
+B_NAME="Simple NAS Backup"
 
 # Settings
 BACKUP_TARGET_MOUNTPOINT="/Volumes/NASbackup"
 BACKUP_SOURCE="/Volumes/lightroom"
+
+
 
 RSYNC_EXCLUDE_FILE="./backup-exclude.txt"
 RSYNC_INCLUDE_FILE="./backup-include.txt"
@@ -13,7 +14,7 @@ RSYNC_OPTIONS="-avbK --itemize-changes --no-owner --no-group --copy-unsafe-links
 function PrintParameters {
 # Print name
 echo ""
-echo "$B_NAME $B_VERSION"§
+echo "$B_NAME"
 echo ""
 # Print settings
 echo "Settings"
@@ -49,15 +50,12 @@ RSYNC_LINK_DEST="--link-dest $PREVIOUS_BACKUP_TARGET_FOLDER"
 
 PrintParameters
 
-#exit 0
-#read -p "Press any key to continue... " -n1 -s
-
 # Check target mountpoint
 if [ -d "$BACKUP_TARGET_MOUNTPOINT" ]
 then	
-	echo "OK: Sparce bundle mounted"
+	echo "OK: Backup target available"
 else
-	echo "ERROR: Sparce bundle not mounted ($BACKUP_TARGET_MOUNTPOINT)."
+	echo "ERROR: Backup target not available ($BACKUP_TARGET_MOUNTPOINT)."
 	read -p "Press enter to quit"
 	exit 1
 
@@ -78,17 +76,6 @@ else
 	echo "OK: Backup target folder exists"
 fi
 
-# Create local TimeMachine snapshot
-echo "Taking local TimeMachine snapshot"
-tmutil snapshot
-if [ $? -ne 0 ]
-then
-	echo "ERROR: Local TimeMachine snapshot failed"
-	read -p "Press enter to quit"
-	exit 1
-fi
-
-
 # Create backup
 rsync $RSYNC_OPTIONS $RSYNC_EXCLUDE $RSYNC_LINK_DEST $BACKUP_SOURCE $BACKUP_TARGET_FOLDER_INCOMPLETE
 if [ $? -ne 0 ]
@@ -101,10 +88,6 @@ fi
 
 # Rename folder to OK
 mv $BACKUP_TARGET_FOLDER_INCOMPLETE $BACKUP_TARGET_FOLDER_OK
-
-# Create link to latest backups folder
-#rm -f $BACKUP_TARGET_MOUNTPOINT/latest
-#ln -s $BACKUP_TARGET_MOUNTPOINT/$BACKUP_TARGET_FOLDER_OK $BACKUP_TARGET_MOUNTPOINT/latest
 
 PrintParameters
 echo "DONE ($BACKUP_TARGET_FOLDER_OK)"
