@@ -48,6 +48,18 @@ RSYNC_LINK_DEST="--link-dest $PREVIOUS_BACKUP_TARGET_FOLDER"
 
 PrintParameters
 
+# Check source mountpoint
+if [ -d "$BACKUP_SOURCE" ]
+then	
+	echo "OK: Backup source available"
+else
+	echo "ERROR: Backup source not available ($BACKUP_SOURCE)."
+	read -p "Press enter to quit"
+	exit 1
+
+fi
+
+
 # Check target mountpoint
 if [ -d "$BACKUP_TARGET_MOUNTPOINT" ]
 then	
