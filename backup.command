@@ -2,7 +2,7 @@
 B_NAME="Simple NAS Backup"
 
 # Settings
-BACKUP_TARGET_MOUNTPOINT="/Volumes/LightroomBackup"
+BACKUP_TARGET="/Volumes/LightroomBackup"
 BACKUP_SOURCE="/Volumes/lightroom"
 
 RSYNC_EXCLUDE_FILE="./backup-exclude.txt"
@@ -18,7 +18,7 @@ echo ""
 echo "Settings"
 echo "   Current day: $CDAY"
 echo "   Source: $BACKUP_SOURCE"
-echo "   Target mount point: $BACKUP_TARGET_MOUNTPOINT"
+echo "   Target mount point: $BACKUP_TARGET"
 echo "   Target folder OK: $BACKUP_TARGET_FOLDER_OK"
 echo "   Target folder FAIL: $BACKUP_TARGET_FOLDER_FAIL"
 echo "   Target folder INCOMPLETE: $BACKUP_TARGET_FOLDER_INCOMPLETE"
@@ -39,10 +39,10 @@ echo "--end--"
 # Target folder name
 CDAY=`date +%Y-%m-%d-%H%M%S`
 
-BACKUP_TARGET_FOLDER_INCOMPLETE="$BACKUP_TARGET_MOUNTPOINT/BACKUP-$CDAY-INCOMPLETE"
-BACKUP_TARGET_FOLDER_OK="$BACKUP_TARGET_MOUNTPOINT/BACKUP-$CDAY-OK"
-BACKUP_TARGET_FOLDER_FAIL="$BACKUP_TARGET_MOUNTPOINT/BACKUP-$CDAY-FAIL"
-PREVIOUS_BACKUP_TARGET_FOLDER=`find $BACKUP_TARGET_MOUNTPOINT  -maxdepth 1 -type d -name BACKUP*OK | sort | tail -n 1`
+BACKUP_TARGET_FOLDER_INCOMPLETE="$BACKUP_TARGET/BACKUP-$CDAY-INCOMPLETE"
+BACKUP_TARGET_FOLDER_OK="$BACKUP_TARGET/BACKUP-$CDAY-OK"
+BACKUP_TARGET_FOLDER_FAIL="$BACKUP_TARGET/BACKUP-$CDAY-FAIL"
+PREVIOUS_BACKUP_TARGET_FOLDER=`find $BACKUP_TARGET  -maxdepth 1 -type d -name BACKUP*OK | sort | tail -n 1`
 #PREVIOUS_BACKUP_TARGET_FOLDER="/Volumes/LightroomBackup/EMPTY"
 RSYNC_LINK_DEST="--link-dest $PREVIOUS_BACKUP_TARGET_FOLDER"
 
@@ -61,11 +61,11 @@ fi
 
 
 # Check target mountpoint
-if [ -d "$BACKUP_TARGET_MOUNTPOINT" ]
+if [ -d "$BACKUP_TARGET" ]
 then	
 	echo "OK: Backup target available"
 else
-	echo "ERROR: Backup target not available ($BACKUP_TARGET_MOUNTPOINT)."
+	echo "ERROR: Backup target not available ($BACKUP_TARGET)."
 	read -p "Press enter to quit"
 	exit 1
 
