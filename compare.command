@@ -2,8 +2,11 @@
 B_NAME="Simple NAS Backup"
 
 # Settings
-BACKUP_TARGET="/Volumes/LightroomBackup"
-BACKUP_SOURCE="/Volumes/lightroom"
+BACKUP_SOURCE="/Volumes/lightroom/main/"
+BACKUP_TARGET="/Volumes/LightroomBackup/BACKUP-2015-10-22-170553-OK/lightroom/main/"
 
-rsync -rvnc --delete $BACKUP_SOURCE $BACKUP_TARGET
+
+
+# add c option to compare contents
+rsync -avn  $BACKUP_SOURCE $BACKUP_TARGET
 
